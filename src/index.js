@@ -12,7 +12,7 @@ module.exports.handler = (req, resp, context) => {
   let url = req.queries['url'];
   // If there is no url in the request parameters, set the default URL
   if (!url) {
-    url = 'https://www.aliyun.com/product/fc';
+    url = 'https://www.baidu.com';
   }
   // Whether it's HTTP or HTTPS, all prefixes are http
   if (!url.startsWith('https://') && !url.startsWith('http://')) {
