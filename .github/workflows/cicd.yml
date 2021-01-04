@@ -1,0 +1,36 @@
+name: serverless CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  
+env:
+  REGION: cn-shenzhen
+  TIMEOUT: 300
+
+jobs:
+  serverless-cicd-job:
+    name: Serverless cicd
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Initializing Serverless-Devs
+      uses: Serverless-Devs/serverless-devs-initialization-action@main
+      with:
+        provider: alibaba
+        AccessKeyID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        AccessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+        AccountID: ${{ secrets.ALIYUN_ACCOUNT_ID }}
+
+    - name: Building
+      run: sudo --preserve-env s build -d
+
+    - name: Packaging
+      run: sudo --preserve-env s package
+
+    - name: Deploying
+      run: sudo --preserve-env s deploy --use-ros --stack-name Screenshot-234 -y
