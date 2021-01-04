@@ -1,0 +1,5 @@
+.s
+.fun
+!src/.fun
+node_modules
+.DS_Store

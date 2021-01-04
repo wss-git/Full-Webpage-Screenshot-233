@@ -1,0 +1,52 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  Puppeteer:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: 'puppeteer web service demo'
+    HtmlToPng:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        CodeUri: ./src
+        Handler: index.handler
+        Initializer: index.initializer
+        Runtime: nodejs10
+        Timeout: 120
+        MemorySize: 1024
+      Events:
+        httpTrigger:
+          Type: HTTP
+          Properties:
+            AuthType: ANONYMOUS
+            Methods: ['GET', 'POST', 'PUT']
+  my_domain:
+    Type: 'Aliyun::Serverless::CustomDomain'
+    Properties:
+      DomainName: Auto
+      Protocol: HTTP
+      RouteConfig:
+        Routes:
+          '/*':
+            ServiceName: Puppeteer
+            FunctionName: HtmlToPng
+            
+Outputs:
+  HttpTriggerEndpoint:
+    Value:
+      'Fn::Join':
+        - ''
+        - - 'https://'
+          - Ref: ALIYUN::AccountId
+          - '.'
+          - Ref: ALIYUN::Region
+          - '.fc.aliyuncs.com/2016-08-15/proxy/'
+          - 'Fn::GetAtt':
+            - Puppeteer
+            - ServiceName
+          - '/'
+          - 'Fn::GetAtt':
+            - PuppeteerHtmlToPng
+            - FunctionName
+          - '/'
+          

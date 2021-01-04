@@ -1,0 +1,14 @@
+fun:
+  Component: fun
+  Provider: alibaba
+  Extends:
+    build:
+      - Hook: npm install
+        Path: ./src
+        Pre: true
+      - Hook: curl https://fc-dashboard.oss-cn-hangzhou.aliyuncs.com/application-template-create-repo-depend/headless_shell.tar.gz > headless_shell.tar.gz
+        Path: ./src
+        Pre: true
+  Properties:
+    Region: ${Env(REGION)}
+    Config: s
